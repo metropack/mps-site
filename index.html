@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MPS Inc — Invoice App</title>
+  <meta name="description" content="Invoice App by MPS Inc. Simple estimates & invoices for print shops." />
+  <link rel="icon" href="data:," />
+
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:var(--bg); color:var(--text); }
+    .wrap { max-width: 1050px; margin: 0 auto; padding: 28px 20px 80px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; }
+    .badge { padding:2px 8px; border:1px solid #334155; border-radius:999px; font-size:12px; color:#cbd5e1; }
+    .cta { display:inline-block; background:var(--accent); color:#052e16; font-weight:700; padding:12px 18px; border-radius:10px; text-decoration:none; }
+    .cta:hover { filter:brightness(0.95); }
+    .ghost { color:var(--text); text-decoration:none; padding:10px 14px; border:1px solid #334155; border-radius:10px; }
+    .ghost:hover { background:#0b1220; }
+    main { margin-top: 36px; display:grid; grid-template-columns: 1.2fr 1fr; gap:30px; }
+    .card { background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid #334155; border-radius:16px; padding:22px; }
+    h1 { margin:0 0 10px; font-size:38px; line-height:1.15; }
+    p.lead { color:var(--muted); font-size:16px; }
+    .stack { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
+    .features { margin-top: 28px; display:grid; grid-template-columns: repeat(3,1fr); gap:14px; }
+    .feature { background:#0b1220; border:1px solid #1f2937; border-radius:12px; padding:14px; color:#cbd5e1; font-size:14px; }
+    .video { aspect-ratio: 16/9; width:100%; border:0; border-radius:12px; }
+    footer { margin-top:40px; display:flex; justify-content:space-between; color:#94a3b8; font-size:13px; }
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <span>🧾</span>
+        <span>MPS Inc • Invoice App</span>
+        <span class="badge">Michigan, USA</span>
+      </div>
+      <nav class="stack">
+        <a class="ghost" href="#video">Watch Demo</a>
+        <a class="cta" href="#subscribe">Subscribe</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h1>Create estimates & invoices in minutes.</h1>
+        <p class="lead">A desktop app for print shops. Simple customer management, line items, taxes, and polished PDFs.</p>
+        <div class="features">
+          <div class="feature">✔ Customer & product library</div>
+          <div class="feature">✔ Sales & customer reports</div>
+          <div class="feature">✔ Stripe-powered subscription</div>
+        </div>
+        <div class="stack">
+          <a class="cta" href="#subscribe">Subscribe Monthly</a>
+          <a class="ghost" href="#video">See how it works</a>
+        </div>
+      </section>
+
+      <aside class="card" id="video">
+        <!-- Replace the YouTube ID below with your real video when ready -->
+        <iframe class="video" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Invoice App Demo" allowfullscreen></iframe>
+      </aside>
+    </main>
+
+    <section id="subscribe" class="card" style="margin-top:24px;">
+      <h2 style="margin:0 0 8px;">Subscribe</h2>
+      <p class="lead">Enter your email to start checkout. You’ll be redirected to our secure Stripe page.</p>
+      <form id="subForm" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <input type="email" id="email" placeholder="you@example.com" required
+               style="flex:1; min-width:260px; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#e5e7eb;">
+        <button class="cta" type="submit">Start Checkout</button>
+      </form>
+      <p id="msg" class="lead" style="margin-top:10px;"></p>
+      <script>
+        document.getElementById('subForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value.trim();
+          const msg = document.getElementById('msg');
+          msg.textContent = 'Starting checkout...';
+
+          // For now this is a placeholder. When your API is live on a domain:
+          //   fetch('https://api.mpsinc.com/api/auth/create-checkout-session', { ... })
+          try {
+            msg.textContent = 'This will be wired to Stripe after we deploy the site.';
+            // window.location.href = returnedSessionUrl;
+          } catch (err) {
+            msg.textContent = 'Could not start checkout. Try again.';
+          }
+        });
+      </script>
+    </section>
+
+    <footer>
+      <span>© <span id="y"></span> MPS Inc. All rights reserved.</span>
+      <span>
+        <a href="#" style="color:#cbd5e1; text-decoration:none;">Privacy</a> ·
+        <a href="#" style="color:#cbd5e1; text-decoration:none;">License</a>
+      </span>
+    </footer>
+    <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+  </div>
+</body>
+</html>
