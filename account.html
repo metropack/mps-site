@@ -17,8 +17,7 @@
     .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid #334155;border-radius:16px;padding:22px}
     h2{margin:0 0 10px}
     label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px}
-    input,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
-    textarea{min-height:90px;resize:vertical}
+    input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .btn{display:inline-block;background:var(--accent);color:#052e16;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer}
     .btn.blue{background:var(--blue);color:#06283b}
@@ -33,7 +32,7 @@
     <header>
       <div>🧾 <strong>MPS Inc • Invoice App</strong></div>
       <div class="stack">
-        <a class="link" href="/" id="homeLink">Home</a>
+        <a class="link" href="/">Home</a>
         <a class="link" href="#" id="logout">Log out</a>
       </div>
     </header>
@@ -64,7 +63,7 @@
               <input id="address" />
             </div>
           </div>
-          <button class="btn" type="submit">Save profile</button>
+          <button class="btn" type="submit" id="saveBtn">Update profile</button>
           <div id="pmsg" class="msg"></div>
         </form>
       </section>
@@ -102,20 +101,20 @@
     const cancelBtn = document.getElementById('cancel');
     const resumeBtn = document.getElementById('resume');
     const pmsg = document.getElementById('pmsg');
+    const saveBtn = document.getElementById('saveBtn');
 
-    // logout
     document.getElementById('logout').onclick = () => {
       localStorage.removeItem('psi_token');
+      localStorage.removeItem('psi_email');
       window.location.href = '/';
     };
 
-    // Load profile + subscription status
     (async function init(){
-      // me
+      // who am I
       const me = await fetch(API + '/api/auth/me', { headers:{Authorization:'Bearer '+token}});
       const meData = await me.json();
       if (me.ok) {
-        emailLine.textContent = 'Signed in as ' + meData.email;
+        emailLine.textContent = 'Signed in as ' + (meData.email || localStorage.getItem('psi_email') || '');
       }
 
       // profile
@@ -128,7 +127,6 @@
         document.getElementById('address').value = p.address || '';
       }
 
-      // billing status
       await loadStatus();
     })();
 
@@ -149,33 +147,26 @@
       resumeBtn.style.display = d.cancel_at_period_end ? 'inline-block' : 'none';
     }
 
-    // manage billing (Stripe customer portal)
     document.getElementById('manageBilling').onclick = async () => {
-      const r = await fetch(API + '/api/billing/portal', {
-        method:'POST',
-        headers:{ 'Authorization':'Bearer '+token }
-      });
+      const r = await fetch(API + '/api/billing/portal', { method:'POST', headers:{ 'Authorization':'Bearer '+token }});
       const d = await r.json();
       if (r.ok && d.url) window.location.href = d.url;
       else alert(d.error || 'Unable to open billing portal');
     };
 
-    // cancel at period end
     cancelBtn.onclick = async () => {
       if (!confirm('Cancel at the end of the current billing period?')) return;
       const r = await fetch(API + '/api/billing/cancel', { method:'POST', headers:{Authorization:'Bearer '+token}});
       if (r.ok) loadStatus(); else alert('Unable to update subscription');
     };
 
-    // resume
     resumeBtn.onclick = async () => {
       const r = await fetch(API + '/api/billing/resume', { method:'POST', headers:{Authorization:'Bearer '+token}});
       if (r.ok) loadStatus(); else alert('Unable to resume subscription');
     };
 
-    // save profile
     document.getElementById('profileForm').addEventListener('submit', async (e)=>{
-      e.preventDefault(); pmsg.textContent='';
+      e.preventDefault(); pmsg.textContent=''; saveBtn.disabled = true;
       const body = {
         name: document.getElementById('name').value.trim(),
         company: document.getElementById('company').value.trim(),
@@ -187,9 +178,10 @@
         headers:{'Content-Type':'application/json', Authorization:'Bearer '+token},
         body: JSON.stringify(body)
       });
-      const d = await r.json();
-      pmsg.textContent = r.ok ? 'Saved.' : (d.error || 'Failed to save');
+      const d = await r.json().catch(()=> ({}));
+      pmsg.textContent = r.ok ? 'Profile updated ✅' : (d.error || 'Failed to save');
       pmsg.className = 'msg' + (r.ok ? '' : ' error');
+      saveBtn.disabled = false;
     });
   </script>
 </body>
