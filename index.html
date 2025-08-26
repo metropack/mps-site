@@ -7,7 +7,6 @@
   <meta name="description" content="Invoice App by MPS Inc. Simple estimates & invoices for print shops." />
   <link rel="icon" href="data:," />
 
-  <!-- Allow API calls to your Render backend (safe to keep even without fetches) -->
   <meta http-equiv="Content-Security-Policy"
   content="
     default-src 'self';
@@ -50,6 +49,7 @@
         <span>MPS Inc • Invoice App</span>
         <span class="badge">Michigan, USA</span>
       </div>
+      <!-- SINGLE nav: Watch Demo / Sign in / Sign up -->
       <nav class="stack">
         <a class="ghost" href="#video">Watch Demo</a>
         <a class="ghost" href="/login.html">Sign in</a>
@@ -72,7 +72,6 @@
       </section>
 
       <aside class="card" id="video">
-        <!-- Replace with your real video when ready -->
         <iframe class="video" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
                 title="Invoice App Demo" allowfullscreen></iframe>
       </aside>
@@ -86,10 +85,7 @@
       </span>
     </footer>
 
-    <script>
-      // year in footer
-      document.getElementById('y').textContent = new Date().getFullYear();
-    </script>
+    <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
   </div>
 </body>
 </html>
