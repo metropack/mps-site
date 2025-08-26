@@ -7,7 +7,7 @@
   <meta name="description" content="Invoice App by MPS Inc. Simple estimates & invoices for print shops." />
   <link rel="icon" href="data:," />
 
-  <!-- Allow API calls to your Render backend -->
+  <!-- Allow API calls to your Render backend (safe to keep even without fetches) -->
   <meta http-equiv="Content-Security-Policy"
   content="
     default-src 'self';
@@ -17,7 +17,6 @@
     frame-src  https://www.youtube.com https://www.youtube-nocookie.com;
     connect-src 'self' https://printshopinvoice-api-backend.onrender.com;
   ">
-
 
   <style>
     :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
@@ -53,7 +52,7 @@
       </div>
       <nav class="stack">
         <a class="ghost" href="#video">Watch Demo</a>
-        <a class="cta" href="#subscribe">Subscribe</a>
+        <a class="cta" href="/signup.html">Sign Up</a>
       </nav>
     </header>
 
@@ -67,7 +66,6 @@
           <div class="feature">✔ Stripe-powered subscription</div>
         </div>
         <div class="stack">
-          <a class="cta" href="#subscribe">Subscribe Monthly</a>
           <a class="ghost" href="#video">See how it works</a>
         </div>
       </section>
@@ -79,19 +77,6 @@
       </aside>
     </main>
 
-    <section id="subscribe" class="card" style="margin-top:24px;">
-      <h2 style="margin:0 0 8px;">Subscribe</h2>
-      <p class="lead">Enter your email to start checkout. You’ll be redirected to our secure Stripe page.</p>
-
-      <!-- IMPORTANT: the form + input have IDs the script uses -->
-      <form id="subForm" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-        <input type="email" id="email" placeholder="you@example.com" required
-               style="flex:1; min-width:260px; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#e5e7eb;">
-        <button class="cta" type="submit">Start Checkout</button>
-      </form>
-      <p id="msg" class="lead" style="margin-top:10px;"></p>
-    </section>
-
     <footer>
       <span>© <span id="y"></span> MPS Inc. All rights reserved.</span>
       <span>
@@ -99,34 +84,10 @@
         <a href="#" style="color:#cbd5e1; text-decoration:none;">License</a>
       </span>
     </footer>
-    <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 
-    <!-- Small script that calls your backend and redirects to Stripe -->
     <script>
-      const API_BASE = 'https://printshopinvoice-api-backend.onrender.com';
-
-      document.getElementById('subForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value.trim();
-        const msg = document.getElementById('msg');
-        msg.textContent = 'Starting checkout...';
-
-        try {
-          const res = await fetch(`${API_BASE}/api/auth/create-checkout-session`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-          });
-          const data = await res.json();
-          if (res.ok && data.url) {
-            window.location.href = data.url;   // redirect to Stripe Checkout
-          } else {
-            msg.textContent = data.error || 'Unable to start checkout.';
-          }
-        } catch (err) {
-          msg.textContent = 'Network error. Please try again.';
-        }
-      });
+      // year in footer
+      document.getElementById('y').textContent = new Date().getFullYear();
     </script>
   </div>
 </body>
