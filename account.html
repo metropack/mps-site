@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>My Account — MPS Inc Invoice App</title>
+  <link rel="icon" href="data:," />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; --blue:#38bdf8; --red:#ef4444; }
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:960px;margin:0 auto;padding:28px 18px 80px}
+    header{display:flex;justify-content:space-between;align-items:center}
+    a.link{color:#93c5fd;text-decoration:none}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid #334155;border-radius:16px;padding:22px}
+    h2{margin:0 0 10px}
+    label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px}
+    input,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
+    textarea{min-height:90px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{display:inline-block;background:var(--accent);color:#052e16;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer}
+    .btn.blue{background:var(--blue);color:#06283b}
+    .btn.red{background:var(--red);color:#fff}
+    .muted{color:var(--muted)}
+    .stack{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .msg{margin-top:10px;color:#cbd5e1}.error{color:#fca5a5}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>🧾 <strong>MPS Inc • Invoice App</strong></div>
+      <div class="stack">
+        <a class="link" href="/" id="homeLink">Home</a>
+        <a class="link" href="#" id="logout">Log out</a>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Profile -->
+      <section class="card">
+        <h2>Profile</h2>
+        <div class="muted" id="emailLine"></div>
+        <form id="profileForm" style="display:grid;gap:12px;margin-top:10px">
+          <div class="row">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" />
+            </div>
+            <div>
+              <label for="company">Company</label>
+              <input id="company" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" />
+            </div>
+            <div>
+              <label for="address">Address</label>
+              <input id="address" />
+            </div>
+          </div>
+          <button class="btn" type="submit">Save profile</button>
+          <div id="pmsg" class="msg"></div>
+        </form>
+      </section>
+
+      <!-- Billing -->
+      <section class="card">
+        <h2>Billing & Subscription</h2>
+        <div id="status" class="muted">Loading…</div>
+        <div class="stack">
+          <button class="btn blue" id="manageBilling">Manage payment / billing</button>
+          <button class="btn red"  id="cancel">Cancel at period end</button>
+          <button class="btn"      id="resume" style="display:none">Resume subscription</button>
+        </div>
+
+        <div style="margin-top:18px">
+          <h3 style="margin:0 0 8px">Download the app</h3>
+          <a class="btn" href="https://github.com/YOURORG/YOURREPO/releases/latest/download/invoiceapp-Setup.exe">Download for Windows</a>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:18px">
+      <h2>Security</h2>
+      <p class="muted">Your payment details are managed securely by Stripe. Use “Manage payment / billing” to update cards or see invoices.</p>
+    </section>
+  </div>
+
+  <script>
+    const API = 'https://printshopinvoice-api-backend.onrender.com';
+    const token = localStorage.getItem('psi_token');
+    if (!token) window.location.href = '/login.html';
+
+    const emailLine = document.getElementById('emailLine');
+    const statusBox = document.getElementById('status');
+    const cancelBtn = document.getElementById('cancel');
+    const resumeBtn = document.getElementById('resume');
+    const pmsg = document.getElementById('pmsg');
+
+    // logout
+    document.getElementById('logout').onclick = () => {
+      localStorage.removeItem('psi_token');
+      window.location.href = '/';
+    };
+
+    // Load profile + subscription status
+    (async function init(){
+      // me
+      const me = await fetch(API + '/api/auth/me', { headers:{Authorization:'Bearer '+token}});
+      const meData = await me.json();
+      if (me.ok) {
+        emailLine.textContent = 'Signed in as ' + meData.email;
+      }
+
+      // profile
+      const pr = await fetch(API + '/api/profile', { headers:{Authorization:'Bearer '+token}});
+      const p = await pr.json();
+      if (pr.ok) {
+        document.getElementById('name').value = p.name || '';
+        document.getElementById('company').value = p.company || '';
+        document.getElementById('phone').value = p.phone || '';
+        document.getElementById('address').value = p.address || '';
+      }
+
+      // billing status
+      await loadStatus();
+    })();
+
+    async function loadStatus(){
+      const r = await fetch(API + '/api/billing/status', { headers:{Authorization:'Bearer '+token}});
+      const d = await r.json();
+      if (!r.ok) { statusBox.textContent = d.error || 'Unable to load status'; return; }
+
+      let t = 'Status: ' + (d.subscription_status || 'unknown');
+      if (d.cancel_at_period_end) t += ' • will cancel at next renewal';
+      if (d.current_period_end) {
+        const dt = new Date(d.current_period_end * 1000);
+        t += ' • period ends ' + dt.toLocaleDateString();
+      }
+      statusBox.textContent = t;
+
+      cancelBtn.style.display = d.cancel_at_period_end ? 'none' : 'inline-block';
+      resumeBtn.style.display = d.cancel_at_period_end ? 'inline-block' : 'none';
+    }
+
+    // manage billing (Stripe customer portal)
+    document.getElementById('manageBilling').onclick = async () => {
+      const r = await fetch(API + '/api/billing/portal', {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+token }
+      });
+      const d = await r.json();
+      if (r.ok && d.url) window.location.href = d.url;
+      else alert(d.error || 'Unable to open billing portal');
+    };
+
+    // cancel at period end
+    cancelBtn.onclick = async () => {
+      if (!confirm('Cancel at the end of the current billing period?')) return;
+      const r = await fetch(API + '/api/billing/cancel', { method:'POST', headers:{Authorization:'Bearer '+token}});
+      if (r.ok) loadStatus(); else alert('Unable to update subscription');
+    };
+
+    // resume
+    resumeBtn.onclick = async () => {
+      const r = await fetch(API + '/api/billing/resume', { method:'POST', headers:{Authorization:'Bearer '+token}});
+      if (r.ok) loadStatus(); else alert('Unable to resume subscription');
+    };
+
+    // save profile
+    document.getElementById('profileForm').addEventListener('submit', async (e)=>{
+      e.preventDefault(); pmsg.textContent='';
+      const body = {
+        name: document.getElementById('name').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        address: document.getElementById('address').value.trim(),
+      };
+      const r = await fetch(API + '/api/profile', {
+        method:'POST',
+        headers:{'Content-Type':'application/json', Authorization:'Bearer '+token},
+        body: JSON.stringify(body)
+      });
+      const d = await r.json();
+      pmsg.textContent = r.ok ? 'Saved.' : (d.error || 'Failed to save');
+      pmsg.className = 'msg' + (r.ok ? '' : ' error');
+    });
+  </script>
+</body>
+</html>

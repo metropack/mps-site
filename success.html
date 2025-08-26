@@ -1,12 +1,75 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Thanks – Print Shop Invoice</title>
-<style>body{font-family:system-ui;margin:0;display:grid;place-items:center;min-height:100vh;background:#f7fafc}
-.card{background:#fff;max-width:720px;margin:24px;padding:32px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-.btn{display:inline-block;margin-top:16px;padding:12px 18px;border-radius:10px;background:#0ea5e9;color:#fff;text-decoration:none;font-weight:600}
-</style></head><body>
-<main class="card">
-  <h1>🎉 Payment successful</h1>
-  <p>Your subscription is active. You can now log in to the app.</p>
-  <a class="btn" href="/">Go to homepage</a>
-</main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Payment successful – Print Shop Invoice</title>
+  <style>
+    body{font-family:system-ui;margin:0;display:grid;place-items:center;min-height:100vh;background:#f7fafc}
+    .card{background:#fff;max-width:720px;margin:24px;padding:32px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    .btn{display:inline-block;margin-top:14px;padding:12px 18px;border-radius:10px;background:#16a34a;color:#fff;text-decoration:none;font-weight:600}
+    .muted{color:#475569}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>🎉 Payment successful</h1>
+    <p class="muted" id="state">Verifying your subscription…</p>
+
+    <div id="download" style="display:none">
+      <p>Your subscription is active. Download the desktop app and log in with your email & password:</p>
+      <!-- TODO: replace this href with your actual installer URL (e.g., GitHub Release link) -->
+      <a class="btn" id="downloadLink" href="https://github.com/YOURORG/YOURREPO/releases/latest/download/invoiceapp-Setup.exe">Download Invoice App</a>
+    </div>
+
+    <div id="retry" style="display:none">
+      <p class="muted">If this takes more than ~10 seconds, click retry.</p>
+      <a class="btn" href="#" id="retryBtn" style="background:#0ea5e9">Retry check</a>
+    </div>
+  </main>
+
+  <script>
+    const API = 'https://printshopinvoice-api-backend.onrender.com';
+    const state = document.getElementById('state');
+    const boxDownload = document.getElementById('download');
+    const boxRetry = document.getElementById('retry');
+    const retryBtn = document.getElementById('retryBtn');
+
+    async function checkActive() {
+      const token = localStorage.getItem('psi_token');
+      if (!token) {
+        state.textContent = 'Please sign up again — no session found.';
+        boxRetry.style.display = 'none';
+        return;
+      }
+      try {
+        const res = await fetch(API + '/api/auth/license-check', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.subscription_active) {
+          state.textContent = 'All set!';
+          boxDownload.style.display = 'block';
+          boxRetry.style.display = 'none';
+        } else {
+          state.textContent = 'Payment received. Waiting for subscription to activate…';
+          boxRetry.style.display = 'block';
+        }
+      } catch (e) {
+        state.textContent = 'Could not verify subscription.';
+        boxRetry.style.display = 'block';
+      }
+    }
+
+    retryBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      state.textContent = 'Re-checking…';
+      checkActive();
+    });
+
+    // try a few times in case the webhook is a second behind
+    checkActive();
+    setTimeout(checkActive, 3000);
+    setTimeout(checkActive, 8000);
+  </script>
+</body>
+</html>
