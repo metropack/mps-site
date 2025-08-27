@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Reset Password — MPS Inc</title>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
+  <style>
+    :root{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#22c55e}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:720px;margin:0 auto;padding:28px 18px 80px}
+    .card{margin-top:22px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid #334155;border-radius:16px;padding:22px}
+    label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px}
+    input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
+    .btn{display:inline-block;background:var(--accent);color:#052e16;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer}
+    .msg{margin-top:12px;color:#cbd5e1}.error{color:#fca5a5}
+    a.link{color:#93c5fd;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Reset your password</h1>
+    <p class="muted">Enter your account email. If it exists, we’ll email a reset link.</p>
+
+    <section class="card">
+      <form id="form">
+        <label for="email">Email</label>
+        <input id="email" type="email" required placeholder="you@example.com"/>
+        <div style="margin-top:12px">
+          <button class="btn" type="submit">Send reset link</button>
+          <a class="link" href="/login.html" style="margin-left:12px">Back to sign in</a>
+        </div>
+        <div id="msg" class="msg"></div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    const API='https://printshopinvoice-api-backend.onrender.com';
+    const form=document.getElementById('form');
+    const msg=document.getElementById('msg');
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      msg.textContent='Sending…';
+      const email=document.getElementById('email').value.trim();
+      try{
+        const r=await fetch(API+'/api/auth/request-password-reset',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({email})
+        });
+        await r.json();
+        msg.textContent='If that email exists, we sent a reset link.';
+      }catch(_){
+        msg.textContent='If that email exists, we sent a reset link.'; // generic
+      }
+    });
+  </script>
+</body>
+</html>
