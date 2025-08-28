@@ -88,6 +88,24 @@
     <section class="card" style="margin-top:18px">
       <h2>Security</h2>
       <p class="muted">Your payment details are managed securely by Stripe. Use “Manage payment / billing” to update cards or see invoices.</p>
+
+      <!-- Change Password -->
+      <form id="pwForm" style="display:grid;gap:12px;max-width:420px;margin-top:10px">
+        <div>
+          <label for="curPw">Current password</label>
+          <input id="curPw" type="password" required />
+        </div>
+        <div>
+          <label for="newPw">New password</label>
+          <input id="newPw" type="password" minlength="6" required />
+        </div>
+        <div>
+          <label for="newPw2">Confirm new password</label>
+          <input id="newPw2" type="password" minlength="6" required />
+        </div>
+        <button class="btn" type="submit">Change password</button>
+        <div id="pwMsg" class="msg"></div>
+      </form>
     </section>
   </div>
 
@@ -182,6 +200,52 @@
       pmsg.textContent = r.ok ? 'Profile updated ✅' : (d.error || 'Failed to save');
       pmsg.className = 'msg' + (r.ok ? '' : ' error');
       saveBtn.disabled = false;
+    });
+
+    // Change password
+    const pwForm = document.getElementById('pwForm');
+    const pwMsg  = document.getElementById('pwMsg');
+
+    pwForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      pwMsg.textContent = '';
+
+      const cur = document.getElementById('curPw').value;
+      const npw = document.getElementById('newPw').value;
+      const npw2 = document.getElementById('newPw2').value;
+
+      if (npw !== npw2) {
+        pwMsg.textContent = 'New passwords do not match';
+        pwMsg.className = 'msg error';
+        return;
+      }
+      if (npw.length < 6) {
+        pwMsg.textContent = 'New password must be at least 6 characters';
+        pwMsg.className = 'msg error';
+        return;
+      }
+
+      try {
+        const r = await fetch(API + '/api/auth/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ currentPassword: cur, newPassword: npw })
+        });
+        const d = await r.json().catch(()=> ({}));
+        if (r.ok) {
+          pwMsg.textContent = 'Password changed ✅';
+          pwMsg.className = 'msg';
+          // Optional: force re-login for safety
+          // localStorage.removeItem('psi_token');
+          // window.location.href = '/login.html';
+        } else {
+          pwMsg.textContent = d.error || 'Failed to change password';
+          pwMsg.className = 'msg error';
+        }
+      } catch (_) {
+        pwMsg.textContent = 'Network error';
+        pwMsg.className = 'msg error';
+      }
     });
   </script>
 </body>
