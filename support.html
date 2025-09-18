@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Contact Support — MPS Inc Invoice App</title>
+  <link rel="icon" href="data:," />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    * { box-sizing:border-box; } body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .wrap { max-width: 780px; margin: 0 auto; padding: 28px 18px 80px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .card { margin-top:22px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid #334155; border-radius:16px; padding:22px; }
+    h1 { margin:0 0 8px; } p.lead { color:var(--muted); margin:0 0 18px; }
+    form { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+    .col-span-2 { grid-column: span 2; } label { font-size:13px; color:#cbd5e1; display:block; margin-bottom:6px; }
+    input, textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#e5e7eb; }
+    textarea { min-height:140px; resize:vertical; }
+    .btn { display:inline-block; background:var(--accent); color:#052e16; font-weight:700; padding:12px 18px; border-radius:10px; text-decoration:none; border:0; cursor:pointer; }
+    .ghost { color:var(--text); text-decoration:none; padding:10px 14px; border:1px solid #334155; border-radius:10px; }
+    .row { display:flex; gap:12px; margin-top:12px; }
+    .msg { margin-top:12px; color:#cbd5e1; } .error { color:#fca5a5; }
+    footer { margin-top:28px; color:#94a3b8; font-size:13px; display:flex; justify-content:space-between; }
+    @media (max-width: 720px) { form { grid-template-columns: 1fr; } .col-span-2 { grid-column:auto; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">🧾 <span>MPS Inc • Invoice App</span></div>
+      <nav><a class="ghost" href="/">Home</a></nav>
+    </header>
+
+    <section class="card">
+      <h1>Contact Support</h1>
+      <p class="lead">Tell us what you need help with. We’ll email you as soon as possible.</p>
+
+      <form id="supportForm" novalidate>
+        <div>
+          <label for="name">Your Name</label>
+          <input id="name" name="name" type="text" placeholder="Jane Doe" />
+        </div>
+        <div>
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" placeholder="MPS Inc." />
+        </div>
+        <div>
+          <label for="email">Email*</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555" />
+        </div>
+        <div>
+          <label for="subject">Subject</label>
+          <input id="subject" name="subject" type="text" placeholder="Billing, login, feature request…" />
+        </div>
+        <div class="col-span-2">
+          <label for="message">How can we help?*</label>
+          <textarea id="message" name="message" required placeholder="Describe the issue or request"></textarea>
+        </div>
+
+        <div class="row">
+          <button class="btn" type="submit" id="submitBtn">Send to Support</button>
+          <a class="ghost" href="/">Cancel</a>
+        </div>
+        <div id="msg" class="msg"></div>
+      </form>
+    </section>
+
+    <footer>
+      <span>© <span id="y"></span> MPS Inc</span>
+      <span><a class="ghost" href="/contact.html">Contact us</a></span>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const API_BASE = 'https://printshopinvoice-api-backend.onrender.com';
+    const form = document.getElementById('supportForm');
+    const msg = document.getElementById('msg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function setMsg(text, isError=false) {
+      msg.textContent = text || '';
+      msg.className = 'msg' + (isError ? ' error' : '');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setMsg('');
+      submitBtn.disabled = true;
+
+      const payload = {
+        type: 'support',
+        name: document.getElementById('name').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        subject: document.getElementById('subject').value.trim(),
+        message: document.getElementById('message').value.trim(),
+      };
+
+      if (!payload.email || !payload.message) {
+        setMsg('Email and message are required.', true);
+        submitBtn.disabled = false; return;
+      }
+
+      try {
+        setMsg('Sending…');
+        const res = await fetch(`${API_BASE}/api/support`, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Unable to send support request.');
+        setMsg('✅ Sent! Check your email for a confirmation.');
+        form.reset();
+      } catch (err) {
+        setMsg(err.message || 'Network error. Please try again.', true);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
