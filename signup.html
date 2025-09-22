@@ -6,7 +6,11 @@
   <title>Sign Up — MPS Inc Invoice App</title>
   <link rel="icon" href="data:," />
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
+        content="default-src 'self';
+                 script-src 'self' 'unsafe-inline';
+                 style-src 'self' 'unsafe-inline';
+                 img-src 'self' data:;
+                 connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
   <style>
     :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
     * { box-sizing:border-box; }
@@ -26,7 +30,7 @@
     .actions { display:flex; gap:12px; margin-top:12px; }
     .btn { display:inline-block; background:var(--accent); color:#052e16; font-weight:700; padding:12px 18px; border-radius:10px; text-decoration:none; border:0; cursor:pointer; }
     .btn:disabled { opacity:.7; cursor:not-allowed; }
-    .ghost { color:var(--text); text-decoration:none; padding:10px 14px; border:1px solid #334155; border-radius:10px; }
+    .ghost { color:#e5e7eb; text-decoration:none; padding:10px 14px; border:1px solid #334155; border-radius:10px; }
     .msg { margin-top:12px; color:#cbd5e1; }
     .error { color:#fca5a5; }
     footer { margin-top:28px; color:#94a3b8; font-size:13px; display:flex; justify-content:space-between; }
@@ -108,7 +112,6 @@
     const msg = document.getElementById('msg');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Require: ≥8 chars, at least 1 letter, 1 number, 1 special char
     const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
     function setMsg(text, isError=false) {
@@ -165,7 +168,7 @@
       try {
         setMsg('Creating your account…');
 
-        // 1) Create the user
+        // 1) Register
         const regRes = await fetch(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -178,7 +181,7 @@
           return;
         }
 
-        // 2) Get a token (use returned token if provided; otherwise login)
+        // 2) Get token: use returned token or login
         let token = regData.token;
         if (!token) {
           setMsg('Signing you in…');
@@ -188,17 +191,20 @@
           localStorage.setItem('psi_email', email);
         }
 
-        // 3) Save profile (best effort)
+        // 3) Save profile (best-effort)
         if (profile.name || profile.company || profile.phone || profile.address) {
           setMsg('Saving your profile…');
           await saveProfile(token, profile);
         }
 
-        // 4) Start Stripe Checkout
+        // 4) Start Stripe Checkout (now with Authorization header)
         setMsg('Redirecting to secure payment…');
         const chkRes = await fetch(`${API_BASE}/api/auth/create-checkout-session`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
           body: JSON.stringify({ email })
         });
         const chkData = await chkRes.json();
