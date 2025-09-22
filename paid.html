@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Payment successful</title>
+  <meta http-equiv="refresh" content="1; url=/login.html?paid=1">
+  <style>
+    body{margin:0;display:grid;place-items:center;height:100vh;font-family:system-ui,sans-serif;background:#0f172a;color:#e5e7eb}
+    .card{padding:24px 28px;border-radius:14px;border:1px solid #334155;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));text-align:center}
+    a{color:#93c5fd}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Payment successful 🎉</h2>
+    <p>Redirecting you to sign in…</p>
+    <p><a href="/login.html?paid=1">Click here if you’re not redirected</a></p>
+  </div>
+  <script>
+    setTimeout(()=>location.replace('/login.html?paid=1'), 800);
+  </script>
+</body>
+</html>
