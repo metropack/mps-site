@@ -6,9 +6,13 @@
   <title>Sign in — MPS Inc Invoice App</title>
   <link rel="icon" href="data:," />
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
+        content="default-src 'self';
+                 script-src 'self' 'unsafe-inline';
+                 style-src 'self' 'unsafe-inline';
+                 img-src 'self' data:;
+                 connect-src 'self' https://printshopinvoice-api-backend.onrender.com;">
   <style>
-    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; --blue:#0ea5e9; }
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
     .wrap{max-width:620px;margin:0 auto;padding:28px 18px 80px}
     header{display:flex;justify-content:space-between;align-items:center}
@@ -16,98 +20,104 @@
     .card{margin-top:22px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid #334155;border-radius:16px;padding:22px}
     label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px}
     input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
-    .btn{display:inline-block;background:var(--accent);color:#052e16;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer}
-    .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+    .btn{display:inline-block;background:var(--blue);color:#052e16;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer;color:#fff}
+    .row{display:grid;grid-template-columns:1fr auto;gap:8px}
     .msg{margin-top:12px;color:#cbd5e1}.error{color:#fca5a5}
+    .banner{margin-bottom:12px;padding:12px 14px;border-radius:10px;background:#064e3b;color:#ecfdf5;border:1px solid #10b981}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div>🧾 <strong>MPS Inc • Invoice App</strong></div>
-      <a class="link" href="/">← Back</a>
+      <a class="link" href="/">Home</a>
     </header>
 
     <section class="card">
-      <h1>Sign in</h1>
+      <h1 style="margin:0 0 12px">Sign in</h1>
+
+      <!-- success banner appears only when ?paid=1 -->
+      <div id="paidBanner" class="banner" style="display:none">
+        Thanks! Your payment was successful — please sign in.
+      </div>
+
       <form id="loginForm" style="display:grid;gap:14px;margin-top:10px">
         <div>
           <label for="email">Email</label>
-          <input id="email" type="email" autocomplete="email" required placeholder="you@example.com"/>
+          <input id="email" type="email" required placeholder="you@example.com" autocomplete="username"/>
         </div>
         <div>
           <label for="password">Password</label>
-          <input id="password" type="password" autocomplete="current-password" required/>
           <div class="row">
-            <span></span>
-            <a class="link" href="/reset.html">Forgot your password?</a>
+            <input id="password" type="password" required placeholder="••••••••" autocomplete="current-password"/>
+            <button type="button" id="togglePw" class="btn" style="padding:0 12px;background:#334155;border:1px solid #475569">Show</button>
           </div>
         </div>
-        <button class="btn" id="btn" type="submit">Sign in</button>
-        <div id="msg" class="msg"></div>
+        <div style="font-size:13px">
+          <a class="link" href="/reset.html">Forgot password?</a>
+        </div>
+
+        <button class="btn" id="loginBtn" type="submit">Sign in</button>
+        <div id="lmsg" class="msg"></div>
       </form>
     </section>
   </div>
 
   <script>
     const API = 'https://printshopinvoice-api-backend.onrender.com';
-    const f = document.getElementById('loginForm');
-    const msg = document.getElementById('msg');
-    const btn = document.getElementById('btn');
-    const emailInput = document.getElementById('email');
 
-    // Prefill email if we have it
-    try {
-      const savedEmail = localStorage.getItem('psi_email');
-      if (savedEmail) emailInput.value = savedEmail;
-    } catch {}
+    // Show success banner if redirected with ?paid=1
+    (function showPaidBanner(){
+      const params = new URLSearchParams(location.search);
+      if (params.get('paid') === '1') {
+        document.getElementById('paidBanner').style.display = 'block';
+        // Clean the URL so refresh doesn't keep the banner
+        history.replaceState(null, '', location.pathname);
+      }
+    })();
 
-    function setMsg(t, err){ msg.textContent=t||''; msg.className='msg'+(err?' error':''); }
+    // Toggle password visibility
+    document.getElementById('togglePw').addEventListener('click', () => {
+      const pw = document.getElementById('password');
+      const btn = document.getElementById('togglePw');
+      if (pw.type === 'password') { pw.type = 'text'; btn.textContent = 'Hide'; }
+      else { pw.type = 'password'; btn.textContent = 'Show'; }
+    });
 
-    f.addEventListener('submit', async (e) => {
+    // Handle sign-in
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      setMsg('');
-      btn.disabled = true;
+      const msg = document.getElementById('lmsg');
+      const btn = document.getElementById('loginBtn');
+      msg.textContent = ''; msg.className = 'msg'; btn.disabled = true;
 
-      const email = emailInput.value.trim();
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       try {
-        const res = await fetch(API + '/api/auth/login', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ email, password })
+        const body = new URLSearchParams({ email, password });
+        const r = await fetch(API + '/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body
         });
-        const data = await res.json();
-        if (!res.ok) {
-          setMsg(data.error || 'Login failed', true);
+        const d = await r.json().catch(()=> ({}));
+        if (!r.ok || !d.token) {
+          msg.textContent = d.error || 'Invalid email or password.';
+          msg.className = 'msg error';
           btn.disabled = false;
           return;
         }
 
-        // Save token + email for later
-        localStorage.setItem('psi_token', data.token);
-        try { localStorage.setItem('psi_email', email); } catch {}
+        // Persist for account.html
+        localStorage.setItem('psi_token', d.token);
+        localStorage.setItem('psi_email', email);
 
-        // Push any pending profile details saved during signup
-        try {
-          const pending = localStorage.getItem('pending_profile');
-          if (pending) {
-            await fetch(API + '/api/profile', {
-              method:'POST',
-              headers:{
-                'Content-Type':'application/json',
-                'Authorization': 'Bearer ' + data.token
-              },
-              body: pending
-            });
-            localStorage.removeItem('pending_profile');
-          }
-        } catch {}
-
-        window.location.href = '/account.html';
-      } catch {
-        setMsg('Network error', true);
+        // Go to account page (manages billing/downloads)
+        location.href = '/account.html';
+      } catch (err) {
+        msg.textContent = 'Network error. Please try again.';
+        msg.className = 'msg error';
         btn.disabled = false;
       }
     });
