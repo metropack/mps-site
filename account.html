@@ -271,10 +271,7 @@
         catch (e) { setMsg(e.message, true); }
       });
 
-      document.getElementById('dlMac')?.addEventListener('click', async () => {
-        try { setMsg('Preparing your macOS download…'); const url = await getLink('/api/download/mac'); window.location.href = url; setMsg(''); }
-        catch (e) { setMsg(e.message, true); }
-      });
+      
     })();
   </script>
 </body>
