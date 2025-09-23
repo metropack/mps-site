@@ -2,74 +2,134 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Payment successful – Print Shop Invoice</title>
+  <title>Payment successful – MPS Inc Invoice App</title>
   <style>
-    body{font-family:system-ui;margin:0;display:grid;place-items:center;min-height:100vh;background:#f7fafc}
-    .card{background:#fff;max-width:720px;margin:24px;padding:32px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    .btn{display:inline-block;margin-top:14px;padding:12px 18px;border-radius:10px;background:#16a34a;color:#fff;text-decoration:none;font-weight:600}
-    .muted{color:#475569}
+    :root { --bg:#f7fafc; --card:#ffffff; --text:#0f172a; --muted:#475569; --ok:#16a34a; --info:#0ea5e9; }
+    * { box-sizing: border-box; }
+    body{font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin:0; background:var(--bg); color:var(--text)}
+    .wrap{display:grid;place-items:center;min-height:100vh;padding:24px}
+    .card{background:var(--card);max-width:760px;width:100%;padding:32px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    h1{margin:0 0 8px}
+    p{margin:0 0 12px}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:600;border:0;cursor:pointer}
+    .btn.ok{background:var(--ok);color:#fff}
+    .btn.info{background:var(--info);color:#fff}
+    .btn.ghost{background:#e2e8f0;color:#0f172a}
+    #retry{display:none}
+    #trouble{display:none}
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1>🎉 Payment successful</h1>
-    <p class="muted" id="state">Verifying your subscription…</p>
+  <div class="wrap">
+    <main class="card">
+      <h1>🎉 Payment successful</h1>
+      <p class="muted" id="state">Verifying your subscription…</p>
 
-    <div id="download" style="display:none">
-      <p>Your subscription is active. Download the desktop app and log in with your email & password:</p>
-      <!-- TODO: replace this href with your actual installer URL (e.g., GitHub Release link) -->
-      <a class="btn" id="downloadLink" href="https://github.com/YOURORG/YOURREPO/releases/latest/download/invoiceapp-Setup.exe">Download Invoice App</a>
-    </div>
+      <div class="row" id="actions" style="margin-top:14px">
+        <a class="btn ok" id="toAccount" href="/account.html" style="display:none">Go to my account</a>
+        <button class="btn info" id="retry">Retry check</button>
+        <a class="btn ghost" href="/">Return to home</a>
+      </div>
 
-    <div id="retry" style="display:none">
-      <p class="muted">If this takes more than ~10 seconds, click retry.</p>
-      <a class="btn" href="#" id="retryBtn" style="background:#0ea5e9">Retry check</a>
-    </div>
-  </main>
+      <p class="muted" id="trouble">This can take a few seconds while Stripe finalizes your subscription. If it takes longer, click “Retry check”.</p>
+    </main>
+  </div>
 
   <script>
     const API = 'https://printshopinvoice-api-backend.onrender.com';
-    const state = document.getElementById('state');
-    const boxDownload = document.getElementById('download');
-    const boxRetry = document.getElementById('retry');
-    const retryBtn = document.getElementById('retryBtn');
+    const stateEl = document.getElementById('state');
+    const retryBtn = document.getElementById('retry');
+    const toAccount = document.getElementById('toAccount');
+    const trouble = document.getElementById('trouble');
 
-    async function checkActive() {
-      const token = localStorage.getItem('psi_token');
-      if (!token) {
-        state.textContent = 'Please sign up again — no session found.';
-        boxRetry.style.display = 'none';
-        return;
-      }
+    const token = localStorage.getItem('psi_token');
+    const sessionId = new URLSearchParams(location.search).get('session_id');
+
+    // If the user isn't signed in locally, send them to login with a hint.
+    if (!token) {
+      location.replace('/login.html?paid=1' + (sessionId ? '&session_id=' + encodeURIComponent(sessionId) : ''));
+    }
+
+    function setState(t) { stateEl.textContent = t; }
+
+    // Hit /billing/status first to force a fresh read from Stripe and sync the DB.
+    async function syncStatus() {
       try {
-        const res = await fetch(API + '/api/auth/license-check', {
-          headers: { Authorization: 'Bearer ' + token }
+        const r = await fetch(API + '/api/billing/status', {
+          headers: { Authorization: 'Bearer ' + token, 'Cache-Control': 'no-store' }
         });
-        const data = await res.json();
-        if (data.subscription_active) {
-          state.textContent = 'All set!';
-          boxDownload.style.display = 'block';
-          boxRetry.style.display = 'none';
-        } else {
-          state.textContent = 'Payment received. Waiting for subscription to activate…';
-          boxRetry.style.display = 'block';
-        }
-      } catch (e) {
-        state.textContent = 'Could not verify subscription.';
-        boxRetry.style.display = 'block';
+        // We don’t need the body here; your endpoint already syncs subscription_status in DB.
+        await r.json().catch(() => ({}));
+      } catch (_) {
+        // ignore; we still try license-check next
       }
     }
 
-    retryBtn?.addEventListener('click', (e) => {
+    async function isActive() {
+      const r = await fetch(API + '/api/auth/license-check', {
+        headers: { Authorization: 'Bearer ' + token, 'Cache-Control': 'no-store' }
+      });
+      const d = await r.json().catch(() => ({}));
+      return !!d.subscription_active;
+    }
+
+    async function waitForActive(attempts = 6) {
+      // ~0s, 1s, 2s, 4s, 4s, 4s ≈ ~15s max
+      const delays = [0, 1000, 2000, 4000, 4000, 4000].slice(0, attempts);
+      for (let i = 0; i < delays.length; i++) {
+        if (delays[i]) await new Promise(r => setTimeout(r, delays[i]));
+        try {
+          await syncStatus(); // force-refresh from Stripe each pass
+          if (await isActive()) return true;
+        } catch (_) {}
+      }
+      return false;
+    }
+
+    async function run(initial = false) {
+      try {
+        if (initial) setState('Verifying your subscription…');
+        const ok = await waitForActive(6);
+        if (ok) {
+          setState('All set! Redirecting to your account…');
+          toAccount.style.display = 'inline-block';
+          // small delay so users see the success, then go
+          setTimeout(() => location.replace('/account.html'), 600);
+          return;
+        }
+        // Not active yet — show retry UI (but not “stuck”)
+        setState('Payment received. Waiting for subscription to activate…');
+        retryBtn.style.display = 'inline-block';
+        trouble.style.display = 'block';
+      } catch (e) {
+        setState('Could not verify subscription right now.');
+        retryBtn.style.display = 'inline-block';
+        trouble.style.display = 'block';
+      }
+    }
+
+    retryBtn.addEventListener('click', async (e) => {
       e.preventDefault();
-      state.textContent = 'Re-checking…';
-      checkActive();
+      retryBtn.disabled = true;
+      setState('Re-checking…');
+      try {
+        const ok = await waitForActive(6);
+        if (ok) {
+          setState('All set! Redirecting to your account…');
+          toAccount.style.display = 'inline-block';
+          setTimeout(() => location.replace('/account.html'), 400);
+        } else {
+          setState('Still waiting for activation…');
+        }
+      } finally {
+        retryBtn.disabled = false;
+      }
     });
 
-    // try a few times in case the webhook is a second behind
-    checkActive();
-    setTimeout(checkActive, 3000);
-    setTimeout(checkActive, 8000);
+    // Kick off the flow
+    run(true);
   </script>
 </body>
 </html>
