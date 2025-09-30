@@ -25,7 +25,12 @@
     form { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
     .col-span-2 { grid-column: span 2; }
     label { font-size:13px; color:#cbd5e1; display:block; margin-bottom:6px; }
-    input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#e5e7eb; }
+    /* inputs + textarea unified */
+    input, textarea {
+      width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155;
+      background:#0b1220; color:#e5e7eb; font:inherit;
+    }
+    textarea { min-height:96px; line-height:1.4; resize:vertical; }
     .hint { margin-top:6px; font-size:12px; color:var(--muted); }
     .actions { display:flex; gap:12px; margin-top:12px; }
     .btn { display:inline-block; background:var(--accent); color:#052e16; font-weight:700; padding:12px 18px; border-radius:10px; text-decoration:none; border:0; cursor:pointer; }
@@ -85,19 +90,19 @@
           <label for="phone">Phone</label>
           <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555" />
         </div>
-                     <div class="col-span-2">
+        <div class="col-span-2">
           <label for="address">Address</label>
-          <textarea id="address" name="address" rows="3" placeholder="Street&#10;Suite / Apt&#10;City, ST ZIP" style="resize:vertical"></textarea>
+          <textarea id="address" name="address" rows="3"
+            placeholder="Street&#10;Suite / Apt&#10;City, ST ZIP"></textarea>
         </div>
 
         <div class="col-span-2 actions">
-
           <button class="btn" type="submit" id="submitBtn">Start 1-day free trial</button>
           <a class="ghost" href="/">Cancel</a>
         </div>
-         <p class="hint col-span-2">You won’t be charged today. Your card will be billed after the 1-day trial ends. Cancel anytime.</p>
-        <div id="msg" class="msg"></div>
 
+        <p class="hint col-span-2">You won’t be charged today. Your card will be billed after the 1-day trial ends. Cancel anytime.</p>
+        <div id="msg" class="msg"></div>
       </form>
     </section>
 

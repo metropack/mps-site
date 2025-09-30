@@ -17,14 +17,27 @@
     .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid #334155;border-radius:16px;padding:22px}
     h2{margin:0 0 10px}
     label{display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px}
-    input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
+    /* Make textarea look like inputs */
+    input, textarea {
+      width:100%;
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid #334155;
+      background:#0b1220;
+      color:#e5e7eb;
+      font:inherit;
+    }
+    textarea{min-height:96px;line-height:1.4;resize:vertical}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    /* allow items inside .row to span both columns */
+    .col-span-2{grid-column:1 / -1}
     .btn{display:inline-block;background:var(--accent);color:#052e16;font-weight:700;padding:12px 18px;border-radius:10px;border:0;cursor:pointer}
     .btn.blue{background:var(--blue);color:#06283b}
     .btn.red{background:var(--red);color:#fff}
     .muted{color:var(--muted)}
     .stack{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .msg{margin-top:10px;color:#cbd5e1}.error{color:#fca5a5}
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
@@ -53,17 +66,20 @@
               <input id="company" />
             </div>
           </div>
+
           <div class="row">
             <div>
               <label for="phone">Phone</label>
               <input id="phone" />
             </div>
-                   <div class="col-span-2">
-          <label for="address">Address</label>
-          <textarea id="address" name="address" rows="3" placeholder="Street&#10;Suite / Apt&#10;City, ST ZIP" style="resize:vertical"></textarea>
-        </div>
-
+            <!-- full-width address inside the row -->
+            <div class="col-span-2">
+              <label for="address">Address</label>
+              <textarea id="address" name="address" rows="3"
+                placeholder="Street&#10;Suite / Apt&#10;City, ST ZIP"></textarea>
+            </div>
           </div>
+
           <button class="btn" type="submit" id="saveBtn">Update profile</button>
           <div id="pmsg" class="msg"></div>
         </form>
@@ -81,10 +97,8 @@
 
         <div style="margin-top:18px">
           <h3 style="margin:0 0 8px">Download the app</h3>
-          <!-- ✅ Only change: buttons that get a signed link -->
           <div class="stack">
             <button class="btn" id="dlWin">Download for Windows</button>
-           
           </div>
           <div id="dlMsg" class="msg"></div>
         </div>
@@ -251,7 +265,7 @@
       }
     });
 
-    // ✅ Only new code: fetch signed URL then navigate
+    // Signed downloads
     (function setupDownloads() {
       const msgEl = document.getElementById('dlMsg');
       const setMsg = (t, bad=false) => { msgEl.textContent = t || ''; msgEl.className = 'msg' + (bad ? ' error' : ''); };
@@ -271,8 +285,6 @@
         try { setMsg('Preparing your Windows download…'); const url = await getLink('/api/download/win'); window.location.href = url; setMsg(''); }
         catch (e) { setMsg(e.message, true); }
       });
-
-      
     })();
   </script>
 </body>
