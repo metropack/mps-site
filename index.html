@@ -19,18 +19,18 @@
   ">
 
   <style>
-    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; --accentText:#052e16; --ring:#334155; }
     * { box-sizing: border-box; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:var(--bg); color:var(--text); }
     .wrap { max-width: 1050px; margin: 0 auto; padding: 28px 20px 80px; }
     header { display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; }
-    .cta { display:inline-block; background:var(--accent); color:#052e16; font-weight:700; padding:12px 18px; border-radius:10px; text-decoration:none; }
+    .cta { display:inline-block; background:var(--accent); color:var(--accentText); font-weight:700; padding:12px 18px; border-radius:10px; text-decoration:none; }
     .cta:hover { filter:brightness(0.95); }
-    .ghost { color:var(--text); text-decoration:none; padding:10px 14px; border:1px solid #334155; border-radius:10px; }
+    .ghost { color:var(--text); text-decoration:none; padding:10px 14px; border:1px solid var(--ring); border-radius:10px; }
     .ghost:hover { background:#0b1220; }
     main { margin-top: 36px; display:grid; grid-template-columns: 1.2fr 1fr; gap:30px; }
-    .card { background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid #334155; border-radius:16px; padding:22px; }
+    .card { background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid var(--ring); border-radius:16px; padding:22px; }
     h1 { margin:0 0 10px; font-size:38px; line-height:1.15; }
     p.lead { color:var(--muted); font-size:16px; }
     .stack { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
@@ -38,6 +38,11 @@
     .feature { background:#0b1220; border:1px solid #1f2937; border-radius:12px; padding:14px; color:#cbd5e1; font-size:14px; }
     .video { width:100%; border:0; border-radius:12px; display:block; }
     footer { margin-top:40px; display:flex; justify-content:space-between; color:#94a3b8; font-size:13px; }
+    .priceRow { display:flex; align-items:end; gap:14px; margin:14px 0 6px; }
+    .price { font-size:32px; font-weight:800; letter-spacing:.2px; }
+    .per { color:var(--muted); font-size:16px; font-weight:500; }
+    .trust { color:#a3e635; font-weight:700; font-size:13px; letter-spacing:.3px; background:#052e16; border:1px solid #064e3b; padding:6px 10px; border-radius:999px; display:inline-flex; gap:8px; align-items:center; }
+    .micro { color:#9bb0c7; font-size:13px; margin-top:6px; }
     @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -49,11 +54,11 @@
         <span>MPS Inc • Invoice App</span>
       </div>
 
-      <!-- Nav: Watch Demo / Sign in / Sign up -->
+      <!-- Nav: Watch Demo / Sign in / Start trial -->
       <nav class="stack">
-     <a class="ghost" href="/assets/demo-1080p.mp4" target="_blank" rel="noopener">Watch Demo</a>
+        <a class="ghost" href="/assets/demo-1080p.mp4" target="_blank" rel="noopener">Watch Demo</a>
         <a class="ghost" href="/login.html">Sign in</a>
-        <a class="cta"   href="/signup.html">Sign up</a>
+        <a class="cta"   href="/signup.html">Start 1-day free trial</a>
       </nav>
     </header>
 
@@ -62,6 +67,13 @@
         <h1>Create estimates & invoices in minutes.</h1>
         <p class="lead">A desktop app for print shops. Simple customer management, line items, taxes, and polished PDFs.</p>
 
+        <div class="priceRow">
+          <div class="price">$29.99</div>
+          <div class="per">per month</div>
+        </div>
+        <div class="trust">✅ Try it free for 1 day</div>
+        <div class="micro">No charge today — your card is billed after the trial ends. Cancel anytime.</div>
+
         <div class="features">
           <div class="feature">✔ Customer & product library</div>
           <div class="feature">✔ Sales & customer reports</div>
@@ -69,20 +81,19 @@
         </div>
 
         <div class="stack">
-         <a class="ghost" href="/assets/demo-1080p.mp4" target="_blank" rel="noopener">See how it works</a>
+          <a class="cta"   href="/signup.html">Start 1-day free trial</a>
+          <a class="ghost" href="/assets/demo-1080p.mp4" target="_blank" rel="noopener">See how it works</a>
         </div>
       </section>
 
       <aside class="card" id="video" aria-label="Product demo video">
-        <!-- Your uploaded video -->
         <video
-  class="video"
-  src="/assets/demo-1080p.mp4"
-  controls
-  preload="metadata"
-  playsinline
-></video>
-
+          class="video"
+          src="/assets/demo-1080p.mp4"
+          controls
+          preload="metadata"
+          playsinline
+        ></video>
       </aside>
     </main>
 
