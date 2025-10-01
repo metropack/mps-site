@@ -198,10 +198,25 @@
       if (r.ok) loadStatus(); else alert('Unable to update subscription');
     };
 
-    resumeBtn.onclick = async () => {
-      const r = await fetch(API + '/api/billing/resume', { method:'POST', headers:{Authorization:'Bearer '+token}});
-      if (r.ok) loadStatus(); else alert('Unable to resume subscription');
-    };
+   resumeBtn.onclick = async () => {
+  try {
+    const r = await fetch(API + '/api/billing/resume', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok) {
+      await loadStatus();
+      if (d.alreadyActive) alert('Subscription is already active.');
+    } else {
+      alert(d.error || 'Unable to resume subscription');
+    }
+  } catch (e) {
+    alert(e.message || 'Network error');
+  }
+};
+
+
 
     document.getElementById('profileForm').addEventListener('submit', async (e)=>{
       e.preventDefault(); pmsg.textContent=''; saveBtn.disabled = true;
