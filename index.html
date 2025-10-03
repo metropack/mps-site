@@ -7,15 +7,25 @@
   <meta name="description" content="Invoice App by MPS Inc. Simple estimates & invoices for print shops." />
   <link rel="icon" href="data:," />
 
-  <!-- CSP updated: no YouTube; allow local MP4 via media-src -->
+  <!-- Google Ads: Global site tag (replace AW-XXXXXXXXX with your ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXXX'); // <-- replace with your Google Ads account ID
+  </script>
+
+  <!-- CSP updated: no YouTube; allow local MP4 via media-src
+       + allow Google Ads/gtag domains so the tag can load and send beacons -->
   <meta http-equiv="Content-Security-Policy"
         content="
     default-src 'self';
-    script-src  'self' 'unsafe-inline' 'unsafe-eval';
+    script-src  'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com;
     style-src   'self' 'unsafe-inline';
-    img-src     'self' data:;
+    img-src     'self' data: https://www.google-analytics.com https://www.googleadservices.com;
     media-src   'self' blob: data:;
-    connect-src 'self' https://printshopinvoice-api-backend.onrender.com;
+    connect-src 'self' https://printshopinvoice-api-backend.onrender.com https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://stats.g.doubleclick.net;
   ">
 
   <style>
@@ -108,6 +118,25 @@
     </footer>
 
     <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+
+    <!-- Google Ads: Conversion event on CTA click.
+         Replace AW-XXXXXXXXX/CONVERSION_LABEL with your values. -->
+    <script>
+      (function () {
+        const track = () => {
+          if (!window.gtag) return;
+          gtag('event', 'conversion', {
+            'send_to': 'AW-XXXXXXXXX/CONVERSION_LABEL',
+            'value': 0,
+            'currency': 'USD'
+          });
+        };
+        // Bind to any link that goes to /signup.html (no markup changes needed)
+        document.querySelectorAll('a[href="/signup.html"]').forEach(a => {
+          a.addEventListener('click', track);
+        });
+      })();
+    </script>
   </div>
 </body>
 </html>
