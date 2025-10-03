@@ -7,25 +7,37 @@
   <meta name="description" content="Invoice App by MPS Inc. Simple estimates & invoices for print shops." />
   <link rel="icon" href="data:," />
 
-  <!-- Google Ads: Global site tag (replace AW-XXXXXXXXX with your ID) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXX"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17617032788"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'AW-XXXXXXXXX'); // <-- replace with your Google Ads account ID
+    gtag('config', 'AW-17617032788');
   </script>
 
-  <!-- CSP updated: no YouTube; allow local MP4 via media-src
-       + allow Google Ads/gtag domains so the tag can load and send beacons -->
+  <!-- CSP updated: allow Google Ads/gtag/DoubleClick hosts -->
   <meta http-equiv="Content-Security-Policy"
         content="
     default-src 'self';
-    script-src  'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com;
+    script-src  'self' 'unsafe-inline' 'unsafe-eval'
+                https://www.googletagmanager.com
+                https://www.google-analytics.com;
     style-src   'self' 'unsafe-inline';
-    img-src     'self' data: https://www.google-analytics.com https://www.googleadservices.com;
+    img-src     'self' data:
+                https://www.google-analytics.com
+                https://www.googleadservices.com
+                https://googleads.g.doubleclick.net
+                https://www.google.com;
     media-src   'self' blob: data:;
-    connect-src 'self' https://printshopinvoice-api-backend.onrender.com https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://stats.g.doubleclick.net;
+    connect-src 'self'
+                https://printshopinvoice-api-backend.onrender.com
+                https://www.googletagmanager.com
+                https://www.google-analytics.com
+                https://www.googleadservices.com
+                https://stats.g.doubleclick.net
+                https://googleads.g.doubleclick.net
+                https://www.google.com;
   ">
 
   <style>
