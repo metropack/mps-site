@@ -16,15 +16,18 @@
     gtag('config', 'AW-17617032788');
   </script>
 
-  <!-- CSP updated: allow Google Ads/gtag/DoubleClick hosts -->
+  <!-- CSP: allow Google Ads/gtag/DoubleClick beacons & scripts -->
   <meta http-equiv="Content-Security-Policy"
         content="
     default-src 'self';
     script-src  'self' 'unsafe-inline' 'unsafe-eval'
                 https://www.googletagmanager.com
-                https://www.google-analytics.com;
+                https://www.google-analytics.com
+                https://www.googleadservices.com
+                https://googleads.g.doubleclick.net;
     style-src   'self' 'unsafe-inline';
     img-src     'self' data:
+                https://www.googletagmanager.com
                 https://www.google-analytics.com
                 https://www.googleadservices.com
                 https://googleads.g.doubleclick.net
@@ -143,7 +146,6 @@
             'currency': 'USD'
           });
         };
-        // Bind to any link that goes to /signup.html (no markup changes needed)
         document.querySelectorAll('a[href="/signup.html"]').forEach(a => {
           a.addEventListener('click', track);
         });
