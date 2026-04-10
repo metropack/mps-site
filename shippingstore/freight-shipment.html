@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Freight Shipment | Metro Pack And Ship</title>
+  <meta
+    name="description"
+    content="Request a freight shipment quote from Metro Pack And Ship in Livonia, Michigan."
+  />
+  <link rel="icon" href="data:," />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    .wrap {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f4c81, #0f62fe);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 42px 28px;
+      box-shadow: 0 18px 40px rgba(15, 98, 254, 0.15);
+      margin-bottom: 28px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .logo-wrap {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      border: 1px solid #e5e7eb;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .hero-logo {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 900px;
+      color: rgba(255,255,255,0.96);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      margin-bottom: 24px;
+      border: 1px solid #e7edf5;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      color: #111827;
+    }
+
+    .sub {
+      margin: 0 0 22px;
+      color: #6b7280;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .note {
+      background: #f8fbff;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 18px;
+      color: #1e3a5f;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .top-info-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .store-info-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .store-info-box h3 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      color: #111827;
+    }
+
+    .store-info-box p {
+      margin: 0 0 12px;
+      color: #374151;
+      line-height: 1.75;
+    }
+
+    .store-info-box a {
+      color: #0f62fe;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .store-info-box a:hover {
+      text-decoration: underline;
+    }
+
+    .map-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map-title {
+      padding: 16px 18px 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 320px;
+      border: 0;
+      display: block;
+    }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .list-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .list-box h3 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      color: #111827;
+    }
+
+    .list-box ul {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.85;
+      color: #374151;
+    }
+
+    .contact-box {
+      background: #f8fbff;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .contact-box h3 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      color: #111827;
+    }
+
+    .contact-box p {
+      margin: 0 0 12px;
+      color: #374151;
+      line-height: 1.7;
+    }
+
+    .contact-box a {
+      color: #0f62fe;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .contact-box a:hover {
+      text-decoration: underline;
+    }
+
+    .download-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #111827;
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #0f62fe;
+      box-shadow: 0 0 0 3px rgba(15, 98, 254, 0.12);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+      border: 0;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: #0f62fe;
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: #e8f0ff;
+      color: #14325b;
+    }
+
+    .btn-submit {
+      background: #0f62fe;
+      color: #ffffff;
+    }
+
+    .msg {
+      margin-top: 14px;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .msg.error {
+      color: #b91c1c;
+    }
+
+    .small-text {
+      margin-top: 16px;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .top-info-grid,
+      .checklist-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .map-frame {
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero,
+      .card {
+        padding: 22px;
+      }
+
+      .logo-wrap {
+        max-width: 100%;
+      }
+
+      .hero-logo {
+        max-width: 100%;
+      }
+
+      .eyebrow {
+        font-size: 15px;
+        padding: 9px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="logo-wrap">
+          <img src="../assets/freight.png" alt="Freight Shipment" class="hero-logo" />
+        </div>
+        <div class="eyebrow">Metro Pack And Ship</div>
+      </div>
+
+      <h1>Freight Shipment</h1>
+      <p>
+        Need a freight shipment quote? Call or email Metro Pack And Ship for a quote.
+        Please try to be as accurate as possible when entering your shipment details so
+        we can provide the most accurate quote possible. Freight shipments are typically
+        placed on pallets with a maximum size of 48&quot; x 40&quot; x 60&quot;. We quote
+        tens of freight shippers to help find the best match for your shipment, keeping
+        in mind time, location, and price.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Store Information</h2>
+      <p class="sub">
+        Contact us directly for a freight quote or use the checklist and form below
+        to send accurate shipment information.
+      </p>
+
+      <div class="top-info-grid">
+        <div class="store-info-box">
+          <h3>Metro Pack And Ship</h3>
+          <p>16998 Middlebelt Rd<br />Livonia, MI 48154</p>
+          <p><a href="tel:7343389904">734-338-9904</a></p>
+          <p><a href="mailto:livonia@metropackandship.com">livonia@metropackandship.com</a></p>
+        </div>
+
+        <div class="map-card">
+          <div class="map-title">Store Location</div>
+          <iframe
+            class="map-frame"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=16998+Middlebelt+Rd,+Livonia,+MI+48154&output=embed"
+            title="Metro Pack And Ship map"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Freight Checklist</h2>
+      <p class="sub">
+        Review the checklist below before requesting a quote. You can also download
+        a checklist file for your records.
+      </p>
+
+      <div class="checklist-grid">
+        <div class="list-box">
+          <h3>Information to Gather</h3>
+          <ul>
+            <li>Full name, company name, phone number, and email address</li>
+            <li>Pickup city, state, zip code, and whether it is residential or commercial</li>
+            <li>Delivery city, state, zip code, and whether it is residential or commercial</li>
+            <li>Number of pallets or pieces</li>
+            <li>Dimensions for each pallet: length, width, and height</li>
+            <li>Weight per pallet and total shipment weight</li>
+            <li>Commodity description</li>
+            <li>Packaging type: palletized, boxed, crated, shrink-wrapped, or other</li>
+            <li>Stackable or non-stackable</li>
+            <li>Liftgate needed at pickup or delivery</li>
+            <li>Inside pickup or inside delivery needed</li>
+            <li>Ready date and any special instructions</li>
+          </ul>
+        </div>
+
+        <div class="contact-box">
+          <h3>Request a Quote</h3>
+          <p>
+            Email: <a href="mailto:livonia@metropackandship.com">livonia@metropackandship.com</a>
+          </p>
+          <p>
+            Phone: <a href="tel:7343389904">734-338-9904</a>
+          </p>
+          <p>
+            We quote tens of freight shippers to help find the best match for your
+            shipment, keeping in mind time, location, and price.
+          </p>
+          <p>
+            For the most accurate quote, please provide complete pallet dimensions,
+            weight, and pickup and delivery details.
+          </p>
+
+          <div class="download-row">
+            <a class="btn btn-secondary" href="../assets/freight-checklist.pdf" download>
+              Download Checklist
+            </a>
+            <a class="btn btn-secondary" href="/shippingstore/">
+              Back to Shipping Store
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Freight Quote Request Form</h2>
+      <p class="sub">
+        Fill out the form below as accurately as possible. Accurate details help us
+        prepare a more accurate freight quote.
+      </p>
+
+      <form id="freightForm" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" name="fullName" type="text" />
+          </div>
+
+          <div class="field">
+            <label for="companyName">Company Name</label>
+            <input id="companyName" name="companyName" type="text" />
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" />
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address*</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+
+          <div class="field">
+            <label for="pickupLocation">Pickup City / State / Zip</label>
+            <input id="pickupLocation" name="pickupLocation" type="text" />
+          </div>
+
+          <div class="field">
+            <label for="deliveryLocation">Delivery City / State / Zip</label>
+            <input id="deliveryLocation" name="deliveryLocation" type="text" />
+          </div>
+
+          <div class="field">
+            <label for="pickupType">Pickup Type</label>
+            <select id="pickupType" name="pickupType">
+              <option value="">Select one</option>
+              <option>Commercial</option>
+              <option>Residential</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="deliveryType">Delivery Type</label>
+            <select id="deliveryType" name="deliveryType">
+              <option value="">Select one</option>
+              <option>Commercial</option>
+              <option>Residential</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="palletCount">Number of Pallets / Pieces</label>
+            <input id="palletCount" name="palletCount" type="number" min="1" />
+          </div>
+
+          <div class="field">
+            <label for="packagingType">Packaging Type</label>
+            <select id="packagingType" name="packagingType">
+              <option value="">Select one</option>
+              <option>Palletized</option>
+              <option>Boxed</option>
+              <option>Crated</option>
+              <option>Shrink-wrapped</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="length">Length (inches)</label>
+            <input id="length" name="length" type="number" min="0" step="0.01" />
+          </div>
+
+          <div class="field">
+            <label for="width">Width (inches)</label>
+            <input id="width" name="width" type="number" min="0" step="0.01" />
+          </div>
+
+          <div class="field">
+            <label for="height">Height (inches)</label>
+            <input id="height" name="height" type="number" min="0" step="0.01" />
+          </div>
+
+          <div class="field">
+            <label for="weight">Weight Per Pallet (lbs)</label>
+            <input id="weight" name="weight" type="number" min="0" step="0.01" />
+          </div>
+
+          <div class="field">
+            <label for="totalWeight">Total Shipment Weight (lbs)</label>
+            <input id="totalWeight" name="totalWeight" type="number" min="0" step="0.01" />
+          </div>
+
+          <div class="field">
+            <label for="stackable">Stackable</label>
+            <select id="stackable" name="stackable">
+              <option value="">Select one</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="liftgatePickup">Liftgate Needed at Pickup</label>
+            <select id="liftgatePickup" name="liftgatePickup">
+              <option value="">Select one</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="liftgateDelivery">Liftgate Needed at Delivery</label>
+            <select id="liftgateDelivery" name="liftgateDelivery">
+              <option value="">Select one</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="insidePickup">Inside Pickup Needed</label>
+            <select id="insidePickup" name="insidePickup">
+              <option value="">Select one</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="insideDelivery">Inside Delivery Needed</label>
+            <select id="insideDelivery" name="insideDelivery">
+              <option value="">Select one</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="readyDate">Shipment Ready Date</label>
+            <input id="readyDate" name="readyDate" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="commodity">Commodity Description</label>
+            <input id="commodity" name="commodity" type="text" />
+          </div>
+
+          <div class="field full">
+            <label for="notes">Additional Notes</label>
+            <textarea id="notes" name="notes"></textarea>
+          </div>
+
+          <div class="field full">
+            <button class="btn btn-submit" type="submit" id="submitBtn">
+              Submit Freight Quote Request
+            </button>
+            <div id="msg" class="msg"></div>
+          </div>
+        </div>
+      </form>
+
+      <p class="small-text">
+        Freight quote requests from this page are intended to be routed to
+        livonia@metropackandship.com through your backend support route.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    const API_BASE = 'https://printshopinvoice-api-backend.onrender.com';
+    const form = document.getElementById('freightForm');
+    const msg = document.getElementById('msg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function setMsg(text, isError = false) {
+      msg.textContent = text || '';
+      msg.className = 'msg' + (isError ? ' error' : '');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setMsg('');
+      submitBtn.disabled = true;
+
+      const payload = {
+        type: 'freight_quote',
+        subject: 'Freight Quote Request',
+        name: document.getElementById('fullName').value.trim(),
+        company: document.getElementById('companyName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        pickupLocation: document.getElementById('pickupLocation').value.trim(),
+        deliveryLocation: document.getElementById('deliveryLocation').value.trim(),
+        pickupType: document.getElementById('pickupType').value,
+        deliveryType: document.getElementById('deliveryType').value,
+        palletCount: document.getElementById('palletCount').value,
+        packagingType: document.getElementById('packagingType').value,
+        length: document.getElementById('length').value,
+        width: document.getElementById('width').value,
+        height: document.getElementById('height').value,
+        weight: document.getElementById('weight').value,
+        totalWeight: document.getElementById('totalWeight').value,
+        stackable: document.getElementById('stackable').value,
+        liftgatePickup: document.getElementById('liftgatePickup').value,
+        liftgateDelivery: document.getElementById('liftgateDelivery').value,
+        insidePickup: document.getElementById('insidePickup').value,
+        insideDelivery: document.getElementById('insideDelivery').value,
+        readyDate: document.getElementById('readyDate').value,
+        commodity: document.getElementById('commodity').value.trim(),
+        notes: document.getElementById('notes').value.trim()
+      };
+
+      if (!payload.email) {
+        setMsg('Email is required.', true);
+        submitBtn.disabled = false;
+        return;
+      }
+
+      try {
+        setMsg('Sending…');
+
+        const res = await fetch(`${API_BASE}/api/support`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Unable to send freight quote request.');
+        }
+
+        setMsg('✅ Freight quote request sent successfully.');
+        form.reset();
+      } catch (err) {
+        setMsg(err.message || 'Network error. Please try again.', true);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

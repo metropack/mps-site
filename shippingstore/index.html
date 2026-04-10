@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shipping Store | Metro Pack And Ship</title>
+  <meta
+    name="description"
+    content="Metro Pack And Ship offers UPS, DHL, FedEx, and freight shipping services in Livonia, Michigan."
+  />
+  <link rel="icon" href="data:," />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #173d7a, #0f62fe);
+      color: #fff;
+      border-radius: 20px;
+      padding: 48px 28px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 780px;
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .store-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      margin-bottom: 30px;
+    }
+
+    .store-card h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      color: #111827;
+    }
+
+    .store-sub {
+      margin: 0 0 24px;
+      color: #6b7280;
+      font-size: 17px;
+    }
+
+    .contact-map-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 1.05fr) minmax(280px, 0.95fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .contact-item {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .contact-item strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #111827;
+    }
+
+    .contact-item p {
+      margin: 0;
+      color: #374151;
+      line-height: 1.65;
+    }
+
+    .contact-item a {
+      color: #0f62fe;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-item a:hover {
+      text-decoration: underline;
+    }
+
+    .map-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .map-title {
+      padding: 16px 18px 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 320px;
+      border: 0;
+      display: block;
+    }
+
+    .services-title {
+      margin: 0 0 18px;
+      font-size: 28px;
+      color: #111827;
+    }
+
+   .services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+    .service-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 26px 22px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      border: 1px solid #edf2f7;
+    }
+
+    .service-card.freight-card {
+  grid-column: 1 / 4;
+  background: linear-gradient(135deg, #f8fbff, #eef5ff);
+  border: 1px solid #d9e7ff;
+}
+
+    .logo-wrap {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      max-height: 100%;
+      max-width: 160px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+  .freight-card .logo-wrap {
+  height: 150px;
+  margin-bottom: 20px;
+  justify-content: flex-start;
+}
+
+.freight-card .logo {
+  max-height: 100%;
+  max-width: 520px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+    .service-card h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: #111827;
+    }
+
+    .service-card p {
+      margin: 0 0 18px;
+      color: #4b5563;
+      line-height: 1.7;
+      min-height: 84px;
+    }
+
+    .freight-card p {
+      min-height: auto;
+      max-width: 520px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: #0f62fe;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+   @media (max-width: 1000px) {
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-card.freight-card {
+    grid-column: 1 / -1;
+  }
+}
+
+    @media (max-width: 900px) {
+      .contact-map-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .map-frame {
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 640px) {
+  .hero, .store-card, .service-card {
+    padding: 22px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card.freight-card {
+    grid-column: span 1;
+  }
+
+  .service-card p {
+    min-height: auto;
+  }
+
+  .logo-wrap {
+    height: 54px;
+  }
+
+  .logo {
+    max-width: 140px;
+  }
+
+  .freight-card .logo-wrap {
+    height: 110px;
+  }
+
+  .freight-card .logo {
+    max-width: 320px;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Metro Pack And Ship</div>
+      <h1>Shipping Store</h1>
+      <p>
+        Metro Pack And Ship offers convenient shipping services through UPS, DHL,
+        FedEx, and freight shipping from our Livonia location. Select a service
+        below to view details and contact information.
+      </p>
+    </section>
+
+    <section class="store-card">
+      <h2>Metro Pack And Ship</h2>
+      <p class="store-sub">Shipping services in Livonia, Michigan</p>
+
+      <div class="contact-map-grid">
+        <div class="contact-grid">
+          <div class="contact-item">
+            <strong>Address</strong>
+            <p>16998 Middlebelt Rd<br />Livonia, MI 48154</p>
+          </div>
+
+          <div class="contact-item">
+            <strong>Phone</strong>
+            <p><a href="tel:7343389904">734-338-9904</a></p>
+          </div>
+
+          <div class="contact-item">
+            <strong>Email</strong>
+            <p><a href="mailto:livonia@metropackandship.com">livonia@metropackandship.com</a></p>
+          </div>
+        </div>
+
+        <div class="map-card">
+          <div class="map-title">Store Location</div>
+          <iframe
+            class="map-frame"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=16998+Middlebelt+Rd,+Livonia,+MI+48154&output=embed"
+            title="Metro Pack And Ship map"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="services-title">Shipping Services</h2>
+
+   <section class="services-grid">
+  <article class="service-card">
+    <div class="logo-wrap">
+      <img src="../assets/ups.png" alt="UPS Logo" class="logo" />
+    </div>
+    <h3>UPS</h3>
+    <p>
+      UPS shipping solutions for personal, business, domestic, and international shipments.
+    </p>
+    <a class="btn" href="/shippingstore/ups-authorized-shipping-center.html">
+      View UPS Page
+    </a>
+  </article>
+
+  <article class="service-card">
+    <div class="logo-wrap">
+      <img src="../assets/dhl.png" alt="DHL Logo" class="logo" />
+    </div>
+    <h3>DHL</h3>
+    <p>
+      DHL Express services for fast international delivery and global shipping support.
+    </p>
+    <a class="btn" href="/shippingstore/dhl-express-service-point.html">
+      View DHL Page
+    </a>
+  </article>
+
+  <article class="service-card">
+    <div class="logo-wrap">
+      <img src="../assets/fedex.png" alt="FedEx Logo" class="logo" />
+    </div>
+    <h3>FedEx</h3>
+    <p>
+      FedEx shipping options for time-sensitive, business, residential, and international packages.
+    </p>
+    <a class="btn" href="/shippingstore/fedex-authorized-shipcenter.html">
+      View FedEx Page
+    </a>
+  </article>
+
+  <article class="service-card freight-card">
+    <div class="logo-wrap">
+      <img src="../assets/freight.png" alt="Freight Shipment Logo" class="logo" />
+    </div>
+    <h3>Freight Shipment</h3>
+    <p>
+      Request a freight quote, download a freight checklist, and submit shipment details
+      for review. Accurate dimensions and weight help us provide a more accurate quote.
+    </p>
+    <a class="btn" href="/shippingstore/freight-shipment.html">
+      View Freight Page
+    </a>
+  </article>
+</section>
+  </div>
+</body>
+</html>
